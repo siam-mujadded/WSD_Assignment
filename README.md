@@ -7,7 +7,7 @@ User class will have fields like name, email, age, address, etc.
 
 Movie class will have name, genre, year of release, budget and cast.
 
-Service class will have procedures like register, unregister, search_by_title, search_by_category, search_by_cast, get_details, add_moivies_to_favorites,
+Service class will have procedures like register, unregister, search_by_title, search_by_category, search_by_cast, get_details, add_movies_to_favorites,
 remove_movies_from_favorites, see_details, search_in_favorites.
 
 Intitially the usser will be prompted to register with his email. Also there will be an exit option. The email should be validated as a valid email address. Then
