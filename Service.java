@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class Service {
@@ -30,6 +27,10 @@ public class Service {
         currentUser = users.get(email);
     }
 
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
     public void logout() {
         currentUser = null;
     }
@@ -45,11 +46,31 @@ public class Service {
         String title = takeInput("Enter the title:");
         title = title.toLowerCase();
         System.out.println("Results for title " + title + ":");
+        List<Movie> results = new ArrayList<>();
         for (Movie movie : searchlist) {
-            if (movie.getTitle().toLowerCase().equals(title)) {
-                System.out.println(movie);
+            if (movie.getTitle().toLowerCase().contains(title)) {
+                results.add(movie);
             }
         }
+        results.sort(Comparator.comparing(Movie::getTitle));
+        for (Movie movie : results) {
+            System.out.println(movie);
+        }
+    }
+
+    public List<Movie> searchByTitle(int choice, String title) {
+        List<Movie> searchlist;
+        if (choice == 1) searchlist = movies;
+        else searchlist = currentUser.getFavorites();
+        title = title.toLowerCase();
+        List<Movie> results = new ArrayList<>();
+        for (Movie movie : searchlist) {
+            if (movie.getTitle().toLowerCase().contains(title)) {
+                results.add(movie);
+            }
+        }
+        results.sort(Comparator.comparing(Movie::getTitle));
+        return results;
     }
 
     private String takeInput(String prompt) {
@@ -65,11 +86,31 @@ public class Service {
         String category = takeInput("Enter the category:");
         category = category.toLowerCase();
         System.out.println("Results for category " + category + ":");
+        List<Movie> results = new ArrayList<>();
         for (Movie movie : searchlist) {
             if (movie.getCategory().toLowerCase().equals(category)) {
-                System.out.println(movie);
+                results.add(movie);
             }
         }
+        results.sort(Comparator.comparing(Movie::getTitle));
+        for (Movie movie : results) {
+            System.out.println(movie);
+        }
+    }
+
+    public List<Movie> searchByCategory(int choice, String category) {
+        List<Movie> searchlist;
+        if (choice == 1) searchlist = movies;
+        else searchlist = currentUser.getFavorites();
+        category = category.toLowerCase();
+        List<Movie> results = new ArrayList<>();
+        for (Movie movie : searchlist) {
+            if (movie.getCategory().toLowerCase().equals(category)) {
+                results.add(movie);
+            }
+        }
+        results.sort(Comparator.comparing(Movie::getTitle));
+        return results;
     }
 
     public void searchByCast(int choice) {
@@ -77,13 +118,31 @@ public class Service {
         if (choice == 1) searchlist = movies;
         else searchlist = currentUser.getFavorites();
         String castMember = takeInput("Enter the cast member:");
-        castMember = castMember.toLowerCase();
         System.out.println("Results for cast member " + castMember + ":");
+        List<Movie> results = new ArrayList<>();
         for (Movie movie : searchlist) {
             if (movie.getCast().contains(castMember)) {
-                System.out.println(movie);
+                results.add(movie);
             }
         }
+        results.sort(Comparator.comparing(Movie::getTitle));
+        for (Movie movie : results) {
+            System.out.println(movie);
+        }
+    }
+
+    public List<Movie> searchByCast(int choice, String castMember) {
+        List<Movie> searchlist;
+        if (choice == 1) searchlist = movies;
+        else searchlist = currentUser.getFavorites();
+        List<Movie> results = new ArrayList<>();
+        for (Movie movie : searchlist) {
+            if (movie.getCast().contains(castMember)) {
+                results.add(movie);
+            }
+        }
+        results.sort(Comparator.comparing(Movie::getTitle));
+        return results;
     }
 
     public List<String> takeMultipleInput() {
@@ -105,10 +164,15 @@ public class Service {
         else searchlist = currentUser.getFavorites();
         List<String> castMembers = takeMultipleInput();
         System.out.println("Results for cast members " + castMembers + ":");
+        List<Movie> results = new ArrayList<>();
         for (Movie movie : searchlist) {
             if (movie.getCast().containsAll(castMembers)) {
-                System.out.println(movie);
+                results.add(movie);
             }
+        }
+        results.sort(Comparator.comparing(Movie::getTitle));
+        for (Movie movie : results) {
+            System.out.println(movie);
         }
     }
 
@@ -117,10 +181,16 @@ public class Service {
         if (choice == 1) searchlist = movies;
         else searchlist = currentUser.getFavorites();
         System.out.println("Results for year " + year + ":");
+        List<Movie> results = new ArrayList<>();
         for (Movie movie : searchlist) {
             if (movie.getReleaseYear() == year) {
-                System.out.println(movie);
+                results.add(movie);
             }
+        }
+
+        results.sort(Comparator.comparing(Movie::getTitle));
+        for (Movie movie : results) {
+            System.out.println(movie);
         }
     }
 
@@ -165,6 +235,22 @@ public class Service {
         System.out.println("Movie not found.");
     }
 
+    public void addToFavorites(String title) {
+        title = title.toLowerCase();
+        for (Movie movie : movies) {
+            if (movie.getTitle().toLowerCase().equals(title)) {
+                currentUser.addFavorite(movie);
+                return;
+            }
+        }
+        System.out.println("Movie not found.");
+    }
+
+    public List<Movie> getFavorites() {
+        currentUser.getFavorites().sort(Movie::compareTo);
+        return currentUser.getFavorites();
+    }
+
     public void removeFromFavorites() {
         List<Movie> favorites = currentUser.getFavorites();
         if (favorites.isEmpty()) {
@@ -189,9 +275,31 @@ public class Service {
         System.out.println("Favorite not found.");
     }
 
+    public void removeFromFavorites(String title) {
+        List<Movie> favorites = currentUser.getFavorites();
+        if (favorites.isEmpty()) {
+            System.out.println("No favorites to remove.");
+            return;
+        }
+
+        for (Movie movie : favorites) {
+            System.out.println(movie.getTitle());
+        }
+        title = title.toLowerCase();
+        for (Movie movie : favorites) {
+            if (movie.getTitle().toLowerCase().equals(title)) {
+                currentUser.removeFavorite(movie);
+                return;
+            }
+        }
+    }
+
     public void seeDetailsOfUser() {
         System.out.println(currentUser);
     }
 
 
+    public void clearMovies() {
+        movies.clear();
+    }
 }

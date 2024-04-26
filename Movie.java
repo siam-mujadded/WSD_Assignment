@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class Movie {
+public class Movie implements Comparable<Movie>{
     private String title;
     private String category;
     private int releaseYear;
@@ -65,6 +65,11 @@ public class Movie {
                 ", budget=" + budget +
                 ", cast=" + cast +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Movie o) {
+        return this.title.compareTo(o.title);
     }
 
 }

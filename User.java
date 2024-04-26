@@ -10,6 +10,10 @@ public class User {
         favorites = new ArrayList<>();
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public void addFavorite(Movie movie) {
         favorites.add(movie);
     }
